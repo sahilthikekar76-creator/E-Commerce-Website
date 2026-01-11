@@ -1,0 +1,63 @@
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
+import register from '../assets/register.webp'
+import { toast } from 'sonner';
+const Register = () => {
+    const[form,setForm]=useState({username:"",email:"",password:"",confirmPassword:""});
+    
+      const handleChange=(e)=>{
+          setForm({...form,[e.target.name]:e.target.value});
+      };
+      const handleSubmit=async(e)=>{
+          e.preventDefault();
+          if(form.password !== form.confirmPassword){
+              toast.error("Password should match",{
+                duration:1000,
+            });
+            return;
+      }
+      }
+      
+  return (
+    <div className='w-full flex items-center justify-center gap-40 p-8 px-20 md:p-12'>
+      <form onSubmit={handleSubmit} className='w-full max-w-md bg-white p-8 rounded-lg border border-gray-200 shadow-sm'>
+        <div className="flex justify-center mb-4">
+          <h2 className='text-xl font-medium'>Rabbit</h2>
+        </div>
+        <h2 className='text-2xl font-medium text-center mb-6'>Hey there!</h2>
+        <p className='text-center mb-4'>
+          Enter your credntials to register 
+        </p>
+        <div className="mb-4">
+          <label className='block text-sm font-semibold mb-2'>Username</label>
+          <input name="username" type="text"value={form.username} required onChange={handleChange} placeholder="Enter your username" className='w-full border rounded p-2' ></input>
+        </div>
+        <div className="mb-4">
+          <label className='block text-sm font-semibold mb-2'>Email</label>
+          <input name="email" type="email"value={form.email} required onChange={handleChange} placeholder="Enter your email address" className='w-full border rounded p-2' ></input>
+        </div>
+        <div className="mb-4">
+          <label className='block text-sm font-semibold mb-2'>Password</label>
+          <input name="password" type="password"value={form.password} onChange={handleChange} required placeholder="Enter your password" className='w-full border rounded p-2' ></input>
+        </div>
+        <div className="mb-4">
+          <label className='block text-sm font-semibold mb-2'>Confirm Password</label>
+          <input name="confirmPassword" type="password"value={form.confirmPassword} onChange={handleChange} required placeholder="Confirm password" className='w-full border rounded p-2' ></input>
+        </div>
+        <button type="submit" className='w-full bg-black text-white rounded-lg font-semibold p-2 hover:bg-gray-800 transition'>Register</button>
+        <p className='mt-6 text-center text-sm'>
+          Already register?
+          <Link to="/login" className='text-blue-500'>
+          Login</Link>
+        </p>
+      </form>
+      <div className="hidden md:block w-1/3 bg-gray-800 ">
+        <div className="w-full h-full rounded-md">
+          <img src={register} alt="login image" className='h-[650px] w-full object-cover'></img>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Register
