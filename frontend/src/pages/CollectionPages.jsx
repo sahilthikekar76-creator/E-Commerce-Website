@@ -17,7 +17,10 @@ const CollectionPages = () => {
     }
     useEffect(()=>{
         document.addEventListener("mousedown",handleClickOutside);
-        document.removeEventListener("mousedown",handleClickOutside); 
+        return()=>{
+             document.removeEventListener("mousedown",handleClickOutside); 
+        }
+       
     },[])
     useEffect(()=>{
         setTimeout(()=>{
@@ -140,7 +143,7 @@ const CollectionPages = () => {
     <div className='flex flex-col lg:flex-row'>
         {/*mobile filter buttn */}
         <button onClick={toggleSideBar} className='lg:hidden border p-2 flex justify-center items-center'>
-            <FaFilter className='mr-2'/>
+            <FaFilter className='mr-2'/>Filters
         </button>
         {/*filter sidebar */}
         <div ref={sidebarRef} className={`${isSideBarOpen?"translate-x-0":"-translate-x-full"} 

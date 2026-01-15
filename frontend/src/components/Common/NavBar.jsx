@@ -26,6 +26,7 @@ const NavBar = () => {
             <Link to='#' className=' text-gray-700 text-sm font-medium uppercase hover:text-black '>Bottom Wear</Link>
         </div>
         <div className="flex items-center space-x-4">
+            <Link to="/admin" className='block bg-black text-white text-sm rounded px-2'>Admin</Link>
             <Link to='/profile' className='hover:text-black'>
             <HiOutlineUser className='h-6 w-6 text-gray-700'/>
             </Link>
