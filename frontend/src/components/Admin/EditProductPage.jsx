@@ -1,6 +1,15 @@
-import React, { useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchProductDetails } from '../../redux/slices/productSlice';
+import axios from 'axios';
+import { updateProduct } from '../../redux/slices/adminProductSlice';
 const EditProductPage = () => {
+    const dispatch=useDispatch();
+    const navigate=useNavigate();
+    const{id}=useParams();
+    const{selectedProduct,loading,error}=useSelector((state)=>state.products);
+
     const[productData,setProductData]=useState({
         name:"",
         description:"",
@@ -14,15 +23,20 @@ const EditProductPage = () => {
         collections:"",
         materials:"",
         gender:"",
-        images:[
-           {
-            url:"https://picsum.photos/200?random=1",
-           },
-           {
-            url:"https://picsum.photos/200?random=2"
-           },
-        ],
+        images:[],
     });
+    const [uploading,setUploading]=useState(false);
+    useEffect(()=>{
+        if(id){
+            dispatch(fetchProductDetails(id));
+        }
+
+    },[dispatch,id]);
+    useEffect(()=>{
+        if(selectedProduct){
+            setProductData(selectedProduct);
+        }
+    },[selectedProduct]);
     const handleChange=(e)=>{
         const {name,value}=e.target;
         setProductData((prevdata)=>({
@@ -32,9 +46,39 @@ const EditProductPage = () => {
     }
     const handleImageUpload=async(e)=>{
         const file=e.target.files[0];
+        const formData=new FormData();
+        formData.append("image",file);
+        try {
+            setUploading(true);
+            const{data}=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/upload`,formData,
+                {
+                    headers:{
+                        "Content-Type":"multipart/form-data"
+                    },
+                }
+            );
+            setProductData((prevdata)=>(
+                {
+                    ...prevdata,
+                    images:[...prevdata.images,{url:data.imageUrl,altText:"",}]
+                }
+            ))
+            setUploading(false);
+        } catch (error) {
+            console.error(error);
+            setUploading(false);
+        }
     }
     const handleSubmit=(e)=>{
         e.preventDefault();
+        dispatch(updateProduct({id,productData}));
+        navigate('/admin/products');
+    }
+    if(loading){
+        return <p>Loading...</p>
+    }
+    if(error){
+        return <p>Error:{error}</p>
     }
   return (
     <div className='mx-auto max-w-5xl p-6 shadow-md rounded'>
@@ -43,7 +87,7 @@ const EditProductPage = () => {
         <div className="mb-6">
             <label className='block font-semibold mb-2'>Description</label>
             <textarea name="description" value={productData.description}
-            className='w-full border border-gray-300 rounded-md p-2' rows={4} required></textarea>
+            className='w-full border border-gray-300 rounded-md p-2'onChange={handleChange}  rows={4} required></textarea>
         </div>
         <div className="mb-6">
             <label className='block font-semibold mb-2'>Product Name</label>
@@ -94,11 +138,12 @@ const EditProductPage = () => {
             className=" w-full border border-gray-300 rounded-md p-2
             file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
              file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" ></input>
+             {uploading &&<p>Uploading image...</p>}
              <div className="flex gap-4 mt-4">
                 {productData.images.map((image,index)=>(
                     <div key={index} className="">
                         <img src={image.url} alt={image.altText || "Product Image"}
-                         className="w-20 h-20object-cover rounded shadow-md" />
+                         className="w-20 h-20 object-cover rounded shadow-md" />
                     </div>
                 ))}
              </div>

@@ -10,7 +10,7 @@ const Register = () => {
     const dispatch=useDispatch();
     const navigate=useNavigate();
 const location=useLocation();
-const{user,guestId}=useSelector((state)=>state.auth);
+const{user,guestId,loading}=useSelector((state)=>state.auth);
 const {cart}=useSelector((state)=>state.cart);
 //get redirect parameter and check if its checkout or something
 const redirect=new URLSearchParams(location.search).get("redirect")||"/";
@@ -76,7 +76,8 @@ useEffect(()=>{
           <label className='block text-sm font-semibold mb-2'>Confirm Password</label>
           <input name="confirmPassword" type="password"value={form.confirmPassword} onChange={handleChange} required placeholder="Confirm password" className='w-full border rounded p-2' ></input>
         </div>
-        <button type="submit" className='w-full bg-black text-white rounded-lg font-semibold p-2 hover:bg-gray-800 transition'>Register</button>
+        <button type="submit" className='w-full bg-black text-white rounded-lg font-semibold p-2 hover:bg-gray-800 transition'>
+          {loading?"Loading...":"Register"}</button>
         <p className='mt-6 text-center text-sm'>
           Already register?
           <Link to={`/login?redirect=${encodeURIComponent(redirect)}`} className='text-blue-500'>

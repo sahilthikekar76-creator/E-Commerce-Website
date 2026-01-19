@@ -12,6 +12,7 @@ const ProductMangement = () => {
         dispatch(fetchAdminProducts());
     },[dispatch])
     const handleDelete=(id)=>{
+        console.log("Deleting product id:", id);
     if(window.confirm("Are you sure u want to delete the product?")){
         dispatch(deleteProduct(id));
     }

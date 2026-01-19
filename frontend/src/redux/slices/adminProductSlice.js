@@ -35,9 +35,9 @@ export const updateProduct=createAsyncThunk("adminProducts/updateProduct",async(
 
 //async thunk to delete a product
 export const deleteProduct=createAsyncThunk("adminProducts/deleteProduct",async(id)=>{
-        await axios.delete(`${API_URL}/api/products/${id}`,{
+        await axios.delete(`${API_URL}/api/admin/products/${id}`,{
         headers:{
-                    Authorization:USER_TOKEN,
+                    Authorization:`Bearer ${localStorage.getItem("userToken")}`,
                 }
     })
     return id;

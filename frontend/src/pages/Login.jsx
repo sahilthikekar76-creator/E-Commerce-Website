@@ -10,7 +10,7 @@ const Login = () => {
   const dispatch = useDispatch();
 const navigate=useNavigate();
 const location=useLocation();
-const{user,guestId}=useSelector((state)=>state.auth);
+const{user,guestId,loading}=useSelector((state)=>state.auth);
 const {cart}=useSelector((state)=>state.cart);
 //get redirect parameter and check if its checkout or something
 const redirect=new URLSearchParams(location.search).get("redirect")||"/";
@@ -73,7 +73,7 @@ useEffect(()=>{
         </div>
 
         <button type="submit" className='w-full bg-black text-white rounded-lg font-semibold p-2 hover:bg-gray-800 transition'>
-          Sign in
+          {loading?"Loading":"Sign In"}
         </button>
 
         <p className='mt-6 text-center text-sm'>
