@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {HiOutlineUser,HiOutlineShoppingBag,HiBars3BottomRight} from 'react-icons/hi2'
 import SearchBar from './SearchBar'
 import CartDrawer from '../Layout/CartDrawer'
@@ -10,6 +10,7 @@ const NavBar = () => {
     const[navDrawerOpen,setNavDrawerOpen]=useState(false);
     const{cart}=useSelector((state)=>state.cart);
     const {user}=useSelector((state)=>state.auth);
+    const navigate = useNavigate();
     const  cartItemCount=cart?.products?.reduce((total,product)=>total+product.quantity,0)||0;
     const toggleCartDrawer=()=>{
         setDrawerOpen(!drawerOpen);
@@ -17,11 +18,20 @@ const NavBar = () => {
     const toggleNavDrawer=()=>{
         setNavDrawerOpen(!navDrawerOpen);
     }
+     
+
+  const handleProfileClick = () => {
+    if (!user) {
+      navigate('/login');
+    } else {
+      navigate('/profile');
+    }
+  };
   return (
     <>
     <nav className='container max-auto flex items-center justify-between px-6 py-4 '>
         <div>
-            <Link to='/' className='text-2xl font-medium'>Rabbit</Link>
+            <Link to='/' className='text-2xl font-medium'>ZipCart</Link>
         </div>
         <div className='hidden md:flex space-x-4'>
             <Link to='/collections/all?gender=Men' className=' text-gray-700 text-sm font-medium uppercase hover:text-black '>Men</Link>
@@ -32,9 +42,9 @@ const NavBar = () => {
         <div className="flex items-center space-x-4">
             {user && user.role==="admin" && (<Link to="/admin" className='block bg-black text-white text-sm rounded px-2'>Admin</Link>)}
             
-            <Link to='/profile' className='hover:text-black'>
-            <HiOutlineUser className='h-6 w-6 text-gray-700'/>
-            </Link>
+           <button onClick={handleProfileClick} className="hover:text-black">
+                <HiOutlineUser className='h-6 w-6 text-gray-700'/>
+            </button>
             <button onClick={toggleCartDrawer} className='relative hover:text-black'>
                 <HiOutlineShoppingBag className='h-6 w-6 text-gray-700'/>
                 {cartItemCount>0 &&(<span className='absolute -top-1 -right-1  bg-red-600 text-white text-xs rounded-full px-2 py-0.5'>{cartItemCount}</span>)}
