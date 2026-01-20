@@ -1,0 +1,13 @@
+{
+    "vercel":2,
+    "builds":[
+        {
+            "src":"package.json",
+            "use":"@vite/static-build",
+            "config":{"distDir":"dist"}
+        }
+    ],
+    "rewrites":[
+        {"source":"/(.*)","destination":"/"}
+    ]
+}
